@@ -1,4 +1,4 @@
-package com.nermeen.movie_app.ui
+package com.nermeen.movie_app.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
