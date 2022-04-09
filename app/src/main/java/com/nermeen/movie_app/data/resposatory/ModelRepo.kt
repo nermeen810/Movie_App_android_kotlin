@@ -1,20 +1,23 @@
 package com.nermeen.movie_app.data.resposatory
 
 import android.util.Log
+import com.nermeen.movie_app.data.dataSource.localDataSource.LocalDataSource
 import com.nermeen.movie_app.data.dataSource.remoteDataSource.ApiDataSource
-import com.nermeen.movie_app.data.model.CategoryResponse
-import com.nermeen.movie_app.data.model.DetailsResponse
+import com.nermeen.movie_app.data.model.*
 import com.nermeen.movie_app.utils.Result
 import java.io.IOException
 import java.lang.Exception
 import javax.inject.Inject
 
-class ModelRepo @Inject constructor(private val apiDataSource: ApiDataSource) : RemoteRepo {
+class ModelRepo @Inject constructor(
+    private val apiDataSource: ApiDataSource,
+    private val localDataSource: LocalDataSource
+) : RemoteRepo, LocalRepo {
 
-    override suspend fun getCategory(category: String): Result<CategoryResponse?> {
+    override suspend fun getCategory(): Result<CategoryResponse?> {
         var result: Result<CategoryResponse?>
         try {
-            val response = apiDataSource.getCategory(category)
+            val response = apiDataSource.getCategory()
             if (response.isSuccessful) {
                 result = Result.Success(response.body())
                 Log.i("ModelRepository", "Result $result")
@@ -30,12 +33,12 @@ class ModelRepo @Inject constructor(private val apiDataSource: ApiDataSource) : 
     }
 
     override suspend fun loadMoreMoviesForCategory(
-        category: String,
+        categoryId: String,
         page: Int
-    ): Result<CategoryResponse?> {
-        var result: Result<CategoryResponse?>
+    ): Result<MoviesResponse?> {
+        var result: Result<MoviesResponse?>
         try {
-            val response = apiDataSource.loadMoreMoviesForCategory(category, page)
+            val response = apiDataSource.loadMoreMoviesForCategory(categoryId, page)
             if (response.isSuccessful) {
                 result = Result.Success(response.body())
                 Log.i("ModelRepository", "Result $result")
@@ -68,4 +71,21 @@ class ModelRepo @Inject constructor(private val apiDataSource: ApiDataSource) : 
         return result
 
     }
+
+    override suspend fun getCategories(): List<Category> {
+        return localDataSource.getCategories()
+    }
+
+    override suspend fun getMovies(): List<Movies> {
+        return localDataSource.getMovies()
+    }
+
+    override suspend fun insertAllMovies(list: List<Movies>) {
+        localDataSource.insertAllMovies(list)
+    }
+
+    override suspend fun insertAllCategories(list: List<Category>) {
+        localDataSource.insertAllCategories(list)
+    }
+
 }

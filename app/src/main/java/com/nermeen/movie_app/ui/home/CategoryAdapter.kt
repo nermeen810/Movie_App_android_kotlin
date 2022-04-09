@@ -1,14 +1,24 @@
 package com.nermeen.movie_app.ui.home
 
-import com.nermeen.movie_app.data.model.CategoryResponse
+import com.nermeen.movie_app.data.model.MoviesResponse
 import com.nermeen.movie_app.databinding.CategoryItemBinding
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.nermeen.movie_app.R
+import com.nermeen.movie_app.data.model.Category
+import com.nermeen.movie_app.data.model.CategoryResponse
 import java.util.*
 
-class CategoryAdapter (private var categoryList: ArrayList<CategoryResponse>,
-                       private val homeViewModel: HomeViewModel) : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>(){
+class CategoryAdapter(private val homeViewModel: HomeViewModel) :
+    ListAdapter<Category, CategoryAdapter.CategoryViewHolder>(CategoryDiffCallback()) {
+
+    var lastSelectedCard: CardView? = null
+    var lastSelectedText: TextView? = null
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -24,35 +34,67 @@ class CategoryAdapter (private var categoryList: ArrayList<CategoryResponse>,
         )
     }
 
-    override fun getItemCount(): Int {
-        return categoryList.size
-    }
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
-        val temp = categoryList[position]
+        if (lastSelectedCard == null && position == 0) {
+            lastSelectedCard = holder.binding.categoryCard
+            lastSelectedText = holder.binding.categoryName
 
-        holder.movieAdapter.addItems(temp!!.results)
-        holder.binding.textView.text = temp.categoryName
-        holder.binding.card.setOnClickListener {
-            homeViewModel.navToServiceDetails(historyList[position])
+            lastSelectedCard?.setCardBackgroundColor(
+                ContextCompat.getColor(
+                    holder.binding.categoryCard.context,
+                    R.color.teal
+                )
+            )
+            lastSelectedText?.setTextColor(
+                ContextCompat.getColor(
+                    holder.binding.categoryCard.context,
+                    R.color.white
+                )
+            )
         }
-
+        val temp = getItem(position)
+        holder.bind(temp)
     }
 
+    inner class CategoryViewHolder(val binding: CategoryItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
+        fun bind(category: Category) {
 
-    fun updateItems(newList: List<CategoryResponse>) {
-        //     historyList.clear()
-        categoryList.addAll(newList)
-        notifyDataSetChanged()
-    }
-    fun clearList() {
-        categoryListcategoryList.clear()
-        notifyDataSetChanged()
-    }
-    inner class CategoryViewHolder(val binding:  CategoryItemBinding) :
-        RecyclerView.ViewHolder(binding.root){
+            binding.categoryName.text = category.name
+            binding.categoryCard.setOnClickListener {
+                homeViewModel.getMovieByCategoryId(category.id)
 
+                lastSelectedCard?.setCardBackgroundColor(
+                    ContextCompat.getColor(
+                        it.context,
+                        R.color.white
+                    )
+                )
+                lastSelectedText?.setTextColor(
+                    ContextCompat.getColor(
+                        it.context,
+                        R.color.black
+                    )
+                )
+
+                binding.categoryCard.setCardBackgroundColor(
+                    ContextCompat.getColor(
+                        it.context,
+                        R.color.teal
+                    )
+                )
+                binding.categoryName.setTextColor(
+                    ContextCompat.getColor(
+                        it.context,
+                        R.color.white
+                    )
+                )
+                lastSelectedCard = binding.categoryCard
+                lastSelectedText = binding.categoryName
+            }
+        }
 
     }
 
