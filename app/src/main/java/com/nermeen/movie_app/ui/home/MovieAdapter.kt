@@ -38,7 +38,7 @@ class MovieAdapter(
 
         fun bind(movies: Movies) {
             Glide.with(binding.ivMoviePoster.context)
-                .load(Constants.createImageUrl(movies.poster_path))
+                .load(movies.poster_path?.let { Constants.createImageUrl(it) })
                 .into(binding.ivMoviePoster)
 
             binding.tvMovieTitle.text = movies.title
