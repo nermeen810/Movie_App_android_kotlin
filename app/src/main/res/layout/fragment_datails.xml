@@ -7,12 +7,8 @@
 
         <variable
             name="viewModel"
-            type="com.nermeen.movie_app.ui.details.view.DetailsViewModel" />
+            type="com.nermeen.movie_app.ui.details.viewModel.DetailsViewModel" />
     </data>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -29,6 +25,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_width="0dp"
                     android:layout_height="300dp"
+                    android:src="@drawable/pictures"
                     android:scaleType="fitCenter"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -116,5 +113,4 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

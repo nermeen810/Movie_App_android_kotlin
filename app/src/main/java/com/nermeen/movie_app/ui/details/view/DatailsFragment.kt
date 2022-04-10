@@ -5,16 +5,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.nermeen.movie_app.R
 import com.nermeen.movie_app.data.model.Movies
 import com.nermeen.movie_app.databinding.FragmentDatailsBinding
+import com.nermeen.movie_app.ui.details.viewModel.DetailsViewModel
+import com.nermeen.movie_app.ui.details.viewModel.DetailsViewModelFactory
 
 
 class DatailsFragment : Fragment() {
     lateinit var viewModel: DetailsViewModel
+    lateinit var binding :FragmentDatailsBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -28,14 +29,16 @@ class DatailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentDatailsBinding.inflate(inflater,container,false)
-        binding.viewModel = viewModel
-        binding.lifecycleOwner = viewLifecycleOwner
-        binding.imageBack.setOnClickListener {
-            findNavController().popBackStack()
-        }
+        binding = FragmentDatailsBinding.inflate(inflater,container,false)
+        setUpUI()
         return binding.root
     }
-
+   private fun setUpUI(){
+       binding.viewModel = viewModel
+       binding.lifecycleOwner = viewLifecycleOwner
+       binding.imageBack.setOnClickListener {
+           findNavController().popBackStack()
+       }
+   }
 
 }

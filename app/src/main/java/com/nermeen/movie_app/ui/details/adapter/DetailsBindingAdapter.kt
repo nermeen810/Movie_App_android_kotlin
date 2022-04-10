@@ -1,4 +1,4 @@
-package com.nermeen.movie_app.ui.details.view
+package com.nermeen.movie_app.ui.details.adapter
 
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter

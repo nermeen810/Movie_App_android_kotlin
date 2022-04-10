@@ -1,4 +1,4 @@
-package com.nermeen.movie_app.ui.home
+package com.nermeen.movie_app.ui.home.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 import com.nermeen.movie_app.data.model.Movies
