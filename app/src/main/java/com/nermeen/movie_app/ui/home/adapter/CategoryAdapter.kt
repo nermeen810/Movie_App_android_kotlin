@@ -1,6 +1,5 @@
-package com.nermeen.movie_app.ui.home
+package com.nermeen.movie_app.ui.home.adapter
 
-import com.nermeen.movie_app.data.model.MoviesResponse
 import com.nermeen.movie_app.databinding.CategoryItemBinding
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -11,10 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.nermeen.movie_app.R
 import com.nermeen.movie_app.data.model.Category
-import com.nermeen.movie_app.data.model.CategoryResponse
 import com.nermeen.movie_app.ui.home.viewModel.HomeViewModel
-import com.nermeen.movie_app.ui.home.adapter.CategoryDiffCallback
-import java.util.*
 
 class CategoryAdapter(private val homeViewModel: HomeViewModel) :
     ListAdapter<Category, CategoryAdapter.CategoryViewHolder>(CategoryDiffCallback()) {

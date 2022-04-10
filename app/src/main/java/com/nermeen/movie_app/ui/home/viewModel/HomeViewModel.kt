@@ -1,10 +1,6 @@
 package com.nermeen.movie_app.ui.home.viewModel
 
-import android.view.View
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.nermeen.movie_app.data.model.CategoryResponse
 import com.nermeen.movie_app.data.model.Movies
 import com.nermeen.movie_app.data.model.MoviesResponse
@@ -13,7 +9,6 @@ import com.nermeen.movie_app.utils.Result
 import com.nermeen.movie_app.utils.SingleEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -33,7 +28,7 @@ class HomeViewModel @Inject constructor(private val modelRepo: ModelRepo) : View
     val movies: LiveData<MoviesResponse?>
         get() = _movies
 
-    val isLoading: LiveData<MoviesResponse?>
+    val isLoading: LiveData<Boolean>
         get() = _isLoading
 
     val errorMessage: LiveData<String>
@@ -47,14 +42,14 @@ class HomeViewModel @Inject constructor(private val modelRepo: ModelRepo) : View
     }
 
     fun  getCategories() {
-        isLoading.value = true
+        _isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             when (val categoryResponse = modelRepo.getCategory()) {
                 is Result.Success -> {
                     categoryResponse.data?.genres?.let {
                         modelRepo.insertAllCategories(it)
                     }
-                    genres.postValue(categoryResponse.data)
+                    _genres.postValue(categoryResponse.data)
                     categoryResponse.data?.genres?.firstOrNull()?.id?.let {
                         getMovieByCategoryId(it)
                     }
@@ -62,14 +57,14 @@ class HomeViewModel @Inject constructor(private val modelRepo: ModelRepo) : View
                 }
 
                 is Result.Error -> {
-                    errorMessage.postValue(categoryResponse.exception.localizedMessage)
+                    _errorMessage.postValue(categoryResponse.exception.localizedMessage)
                     modelRepo.getCategories().let {
-                        genres.postValue(CategoryResponse(it))
+                        _genres.postValue(CategoryResponse(it))
                         val result = modelRepo.getMovies().filter { movie ->
                             movie.genre_ids.contains(it.firstOrNull()?.id)
                         }
-                        movies.postValue(MoviesResponse(0, result, 0, 0))
-                        isLoading.postValue(false)
+                        _movies.postValue(MoviesResponse(0, result, 0, 0))
+                        _isLoading.postValue(false)
                     }
 
                 }
@@ -78,11 +73,11 @@ class HomeViewModel @Inject constructor(private val modelRepo: ModelRepo) : View
         }
     }
     fun navigateToDetails(movies: Movies) {
-        navigationToDetailsLiveDate.postValue(SingleEvent(movies))
+        _navigationToDetailsLiveDate.postValue(SingleEvent(movies))
     }
 
     fun getMovieByCategoryId(id: Int) {
-        isLoading.postValue(true)
+        _isLoading.postValue(true)
         viewModelScope.launch(Dispatchers.IO) {
             val moviesResponse =
                 modelRepo.loadMoreMoviesForCategory(id.toString(), pageNumber)
@@ -92,17 +87,17 @@ class HomeViewModel @Inject constructor(private val modelRepo: ModelRepo) : View
                         modelRepo.insertAllMovies(it)
                     }
 
-                    movies.postValue(moviesResponse.data)
-                    isLoading.postValue(false)
+                    _movies.postValue(moviesResponse.data)
+                    _isLoading.postValue(false)
                 }
 
                 is Result.Error -> {
-                    errorMessage.postValue(moviesResponse.exception.localizedMessage)
+                    _errorMessage.postValue(moviesResponse.exception.localizedMessage)
                     val result = modelRepo.getMovies().filter {
                         it.genre_ids.contains(id)
                     }
-                    movies.postValue(MoviesResponse(0, result, 0, 0))
-                    isLoading.postValue(false)
+                    _movies.postValue(MoviesResponse(0, result, 0, 0))
+                    _isLoading.postValue(false)
                 }
             }
         }

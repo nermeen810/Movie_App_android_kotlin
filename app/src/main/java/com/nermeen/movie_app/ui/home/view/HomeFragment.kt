@@ -16,9 +16,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.nermeen.movie_app.R
 import com.nermeen.movie_app.databinding.FragmentHomeBinding
-import com.nermeen.movie_app.ui.home.CategoryAdapter
+import com.nermeen.movie_app.ui.home.adapter.CategoryAdapter
 import com.nermeen.movie_app.ui.home.viewModel.HomeViewModel
-import com.nermeen.movie_app.ui.home.MovieAdapter
+import com.nermeen.movie_app.ui.home.adapter.MovieAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -53,7 +53,7 @@ class HomeFragment : Fragment() {
         binding.categoriesRecycle.adapter = categoryAdapter
         movieAdapter = MovieAdapter(viewModel)
         binding.moviesRecycle.layoutManager = GridLayoutManager(context, 2)
-        binding.moviesRecycle.adapter = adapter
+        binding.moviesRecycle.adapter = movieAdapter
     }
 
    private fun observeData(){
