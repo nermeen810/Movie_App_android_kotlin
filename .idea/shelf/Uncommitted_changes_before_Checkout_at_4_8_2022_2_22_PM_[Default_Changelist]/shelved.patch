@@ -1,0 +1,88 @@
+Index: .idea/.gitignore
+===================================================================
+--- .idea/.gitignore	(revision aec029619286d3baebbb74b4978502e3df8f87b5)
++++ .idea/.gitignore	(revision aec029619286d3baebbb74b4978502e3df8f87b5)
+@@ -1,3 +0,0 @@
+-# Default ignored files
+-/shelf/
+-/workspace.xml
+Index: .idea/misc.xml
+===================================================================
+--- .idea/misc.xml	(revision aec029619286d3baebbb74b4978502e3df8f87b5)
++++ .idea/misc.xml	(revision aec029619286d3baebbb74b4978502e3df8f87b5)
+@@ -1,9 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+-    <output url="file://$PROJECT_DIR$/build/classes" />
+-  </component>
+-  <component name="ProjectType">
+-    <option name="id" value="Android" />
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/jarRepositories.xml
+===================================================================
+--- .idea/jarRepositories.xml	(revision aec029619286d3baebbb74b4978502e3df8f87b5)
++++ .idea/jarRepositories.xml	(revision aec029619286d3baebbb74b4978502e3df8f87b5)
+@@ -1,30 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="RemoteRepositoriesConfiguration">
+-    <remote-repository>
+-      <option name="id" value="central" />
+-      <option name="name" value="Maven Central repository" />
+-      <option name="url" value="https://repo1.maven.org/maven2" />
+-    </remote-repository>
+-    <remote-repository>
+-      <option name="id" value="jboss.community" />
+-      <option name="name" value="JBoss Community repository" />
+-      <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
+-    </remote-repository>
+-    <remote-repository>
+-      <option name="id" value="MavenRepo" />
+-      <option name="name" value="MavenRepo" />
+-      <option name="url" value="https://repo.maven.apache.org/maven2/" />
+-    </remote-repository>
+-    <remote-repository>
+-      <option name="id" value="BintrayJCenter" />
+-      <option name="name" value="BintrayJCenter" />
+-      <option name="url" value="https://jcenter.bintray.com/" />
+-    </remote-repository>
+-    <remote-repository>
+-      <option name="id" value="Google" />
+-      <option name="name" value="Google" />
+-      <option name="url" value="https://dl.google.com/dl/android/maven2/" />
+-    </remote-repository>
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/compiler.xml
+===================================================================
+--- .idea/compiler.xml	(revision aec029619286d3baebbb74b4978502e3df8f87b5)
++++ .idea/compiler.xml	(revision aec029619286d3baebbb74b4978502e3df8f87b5)
+@@ -1,6 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="CompilerConfiguration">
+-    <bytecodeTargetLevel target="11" />
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/gradle.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"GradleSettings\">\r\n    <option name=\"linkedExternalProjectsSettings\">\r\n      <GradleProjectSettings>\r\n        <option name=\"testRunner\" value=\"PLATFORM\" />\r\n        <option name=\"distributionType\" value=\"DEFAULT_WRAPPED\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"modules\">\r\n          <set>\r\n            <option value=\"$PROJECT_DIR$\" />\r\n            <option value=\"$PROJECT_DIR$/app\" />\r\n          </set>\r\n        </option>\r\n        <option name=\"resolveModulePerSourceSet\" value=\"false\" />\r\n      </GradleProjectSettings>\r\n    </option>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/gradle.xml	(revision aec029619286d3baebbb74b4978502e3df8f87b5)
++++ .idea/gradle.xml	(date 1649420299986)
+@@ -6,6 +6,7 @@
+         <option name="testRunner" value="PLATFORM" />
+         <option name="distributionType" value="DEFAULT_WRAPPED" />
+         <option name="externalProjectPath" value="$PROJECT_DIR$" />
++        <option name="gradleJvm" value="11" />
+         <option name="modules">
+           <set>
+             <option value="$PROJECT_DIR$" />
