@@ -1,10 +1,13 @@
 package com.nermeen.movie_app.di.module
 
+import android.content.Context
 import com.nermeen.movie_app.data.dataSource.remoteDataSource.ApiService
+import com.nermeen.movie_app.data.dataSource.remoteDataSource.NetworkConnectionInterceptor
 import com.nermeen.movie_app.utils.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -18,11 +21,12 @@ class RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideRetrofit(): Retrofit {
+    fun provideRetrofit(okHttpClient:OkHttpClient): Retrofit {
+
         return Retrofit.Builder()
             .baseUrl(Constants.base_url)
             .addConverterFactory(GsonConverterFactory.create())
-            .client(provideClient())
+            .client(okHttpClient)
             .build()
     }
 
@@ -33,12 +37,10 @@ class RetrofitModule {
     }
 
     @Provides
-    fun provideClient() : OkHttpClient {
+    fun provideClient(@ApplicationContext context: Context) : OkHttpClient {
 
-        val interceptor = HttpLoggingInterceptor()
-        interceptor.level  =  HttpLoggingInterceptor.Level.BODY
         return OkHttpClient.Builder()
-            .addInterceptor(interceptor)
+            .addInterceptor(NetworkConnectionInterceptor(context))
             .build()
     }
 

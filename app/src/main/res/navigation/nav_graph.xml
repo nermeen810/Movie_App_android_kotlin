@@ -9,10 +9,20 @@
         android:id="@+id/datailsFragment"
         android:name="com.nermeen.movie_app.ui.details.view.DatailsFragment"
         android:label="fragment_datails"
-        tools:layout="@layout/fragment_datails" />
+        tools:layout="@layout/fragment_datails" >
+        <argument
+            android:name="movie"
+            app:argType="com.nermeen.movie_app.data.model.Movies" />
+    </fragment>
+
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.nermeen.movie_app.ui.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_datailsFragment"
+            app:destination="@id/datailsFragment" />
+    </fragment>
+
 </navigation>

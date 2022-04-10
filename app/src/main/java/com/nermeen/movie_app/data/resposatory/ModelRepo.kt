@@ -23,7 +23,7 @@ class ModelRepo @Inject constructor(
                 Log.i("ModelRepository", "Result $result")
             } else {
                 Log.i("ModelRepository", "Error${response.errorBody()?.string()}")
-                result = Result.Error(Exception("error"))
+                result = Result.Error(Exception(response.message()))
             }
         } catch (e: IOException) {
             result = Result.Error(e)
@@ -44,7 +44,7 @@ class ModelRepo @Inject constructor(
                 Log.i("ModelRepository", "Result $result")
             } else {
                 Log.i("ModelRepository", " Error ${response.errorBody()?.string()}")
-                result = Result.Error(Exception("error"))
+                result = Result.Error(Exception(response.message()))
             }
         } catch (e: IOException) {
             result = Result.Error(e)
@@ -62,7 +62,7 @@ class ModelRepo @Inject constructor(
                 Log.i("ModelRepository", "Result $result")
             } else {
                 Log.i("ModelRepository", " Error ${response.errorBody()?.string()}")
-                result = Result.Error(Exception("error"))
+                result = Result.Error(Exception(response.message()))
             }
         } catch (e: IOException) {
             result = Result.Error(e)

@@ -5,15 +5,22 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.nermeen.movie_app.R
+import com.nermeen.movie_app.data.model.Movies
+import com.nermeen.movie_app.databinding.FragmentDatailsBinding
 
 
 class DatailsFragment : Fragment() {
-
+    lateinit var viewModel: DetailsViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-
+            val movie = it.getSerializable("movie") as Movies
+            viewModel =
+                ViewModelProvider(this, DetailsViewModelFactory(movie))[DetailsViewModel::class.java]
         }
     }
 
@@ -21,8 +28,13 @@ class DatailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_datails, container, false)
+        val binding = FragmentDatailsBinding.inflate(inflater,container,false)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.imageBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
+        return binding.root
     }
 
 
