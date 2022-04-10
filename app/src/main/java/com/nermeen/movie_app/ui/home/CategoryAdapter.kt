@@ -36,7 +36,7 @@ class CategoryAdapter(private val homeViewModel: HomeViewModel) :
 
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
-        if (lastSelectedCard == null && position == 0) {
+        if (lastSelectedCard == null && position == homeViewModel.lastSelectedPos) {
             lastSelectedCard = holder.binding.categoryCard
             lastSelectedText = holder.binding.categoryName
 
@@ -54,18 +54,18 @@ class CategoryAdapter(private val homeViewModel: HomeViewModel) :
             )
         }
         val temp = getItem(position)
-        holder.bind(temp)
+        holder.bind(temp,position)
     }
 
     inner class CategoryViewHolder(val binding: CategoryItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(category: Category) {
+        fun bind(category: Category,position: Int) {
 
             binding.categoryName.text = category.name
             binding.categoryCard.setOnClickListener {
                 homeViewModel.getMovieByCategoryId(category.id)
-
+                homeViewModel.lastSelectedPos = position
                 lastSelectedCard?.setCardBackgroundColor(
                     ContextCompat.getColor(
                         it.context,

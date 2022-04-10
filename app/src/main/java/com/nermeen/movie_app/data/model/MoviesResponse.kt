@@ -2,6 +2,7 @@ package com.nermeen.movie_app.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 data class MoviesResponse(
     val page: Int,
@@ -36,4 +37,4 @@ data class Movies(
     val video: Boolean,
     val vote_average: Double,
     val vote_count: Int
-)
+) : Serializable

@@ -5,8 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.nermeen.movie_app.R
 import com.nermeen.movie_app.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,11 +40,36 @@ class HomeFragment : Fragment() {
             adapterC.submitList(it?.genres)
         }
         val adapter = MovieAdapter(viewModel)
-        binding.moviesRecycle.layoutManager = GridLayoutManager(context,2)
+        binding.moviesRecycle.layoutManager = GridLayoutManager(context, 2)
         binding.moviesRecycle.adapter = adapter
 
         viewModel.movies.observe(viewLifecycleOwner) {
             adapter.submitList(it?.results)
+        }
+
+        viewModel.navigationToDetailsLiveDate.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { movie ->
+                val bundle = Bundle()
+                bundle.putSerializable("movie",movie)
+                findNavController().navigate(R.id.action_homeFragment_to_datailsFragment,bundle)
+            }
+        }
+
+        viewModel.errorMessage.observe(viewLifecycleOwner) {
+            Snackbar.make(requireView(), it, Snackbar.LENGTH_INDEFINITE)
+                .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE).setBackgroundTint(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.teal
+                    )
+                )
+                .setActionTextColor( ContextCompat.getColor(
+                    requireContext(),
+                    R.color.white
+                ))
+                .setAction("ok")
+                {
+                }.show()
         }
         return binding.root
     }

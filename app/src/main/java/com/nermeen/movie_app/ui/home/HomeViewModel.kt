@@ -6,9 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nermeen.movie_app.data.model.CategoryResponse
+import com.nermeen.movie_app.data.model.Movies
 import com.nermeen.movie_app.data.model.MoviesResponse
 import com.nermeen.movie_app.data.resposatory.ModelRepo
 import com.nermeen.movie_app.utils.Result
+import com.nermeen.movie_app.utils.SingleEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -20,8 +22,11 @@ class HomeViewModel @Inject constructor(private val modelRepo: ModelRepo) : View
 
     val genres: MutableLiveData<CategoryResponse?> = MutableLiveData()
     val movies: MutableLiveData<MoviesResponse?> = MutableLiveData()
-
+    var lastSelectedPos = 0
     val isLoading: MutableLiveData<Boolean> = MutableLiveData()
+    val errorMessage: MutableLiveData<String> = MutableLiveData()
+    val navigationToDetailsLiveDate: MutableLiveData<SingleEvent<Movies>> = MutableLiveData()
+
     private var pageNumber = 1
 
     init {
@@ -40,10 +45,10 @@ class HomeViewModel @Inject constructor(private val modelRepo: ModelRepo) : View
                 }
 
                 is Result.Error -> {
+                    errorMessage.postValue(categoryResponse.exception.localizedMessage)
                     modelRepo.getCategories().let {
                         genres.postValue(CategoryResponse(it))
-
-                        val result =modelRepo.getMovies().filter { movie ->
+                        val result = modelRepo.getMovies().filter { movie ->
                             movie.genre_ids.contains(it.firstOrNull()?.id)
                         }
                         movies.postValue(MoviesResponse(0, result, 0, 0))
@@ -55,6 +60,10 @@ class HomeViewModel @Inject constructor(private val modelRepo: ModelRepo) : View
 
         }
 
+    }
+
+    fun navigateToDetails(movies: Movies) {
+        navigationToDetailsLiveDate.postValue(SingleEvent(movies))
     }
 
     fun getMovieByCategoryId(id: Int) {
@@ -73,7 +82,8 @@ class HomeViewModel @Inject constructor(private val modelRepo: ModelRepo) : View
                 }
 
                 is Result.Error -> {
-                    val result =modelRepo.getMovies().filter {
+                    errorMessage.postValue(moviesResponse.exception.localizedMessage)
+                    val result = modelRepo.getMovies().filter {
                         it.genre_ids.contains(id)
                     }
                     movies.postValue(MoviesResponse(0, result, 0, 0))

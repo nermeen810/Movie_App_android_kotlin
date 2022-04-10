@@ -43,9 +43,9 @@ class MovieAdapter(
 
             binding.tvMovieTitle.text = movies.title
 
-//            binding.card.setOnClickListener {
-//                homeViewModel.navToServiceDetails(movies)
-//            }
+            binding.card.setOnClickListener {
+                homeViewModel.navigateToDetails(movies)
+            }
         }
 
     }
