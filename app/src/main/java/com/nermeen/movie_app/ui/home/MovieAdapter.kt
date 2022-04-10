@@ -2,6 +2,8 @@ package com.nermeen.movie_app.ui.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.nermeen.movie_app.ui.home.viewModel.HomeViewModel
+import com.nermeen.movie_app.ui.home.adapter.MoviesDiffCallback
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide

@@ -6,26 +6,12 @@
         <import type="android.view.View"/>
         <variable
             name="viewmodel"
-            type="com.nermeen.movie_app.ui.home.HomeViewModel" />
+            type="com.nermeen.movie_app.ui.home.viewModel.HomeViewModel" />
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center"
-        android:text="@string/movies"
-        android:textColor="@color/teal"
-        android:textSize="22sp"
-        android:layout_margin="@dimen/margin_layout"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/categories_recycle"
@@ -37,8 +23,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
-
+        app:layout_constraintTop_toTopOf="parent"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/movies_recycle"
         android:layout_width="match_parent"

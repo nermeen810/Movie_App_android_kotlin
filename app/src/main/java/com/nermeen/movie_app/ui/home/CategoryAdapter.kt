@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nermeen.movie_app.R
 import com.nermeen.movie_app.data.model.Category
 import com.nermeen.movie_app.data.model.CategoryResponse
+import com.nermeen.movie_app.ui.home.viewModel.HomeViewModel
+import com.nermeen.movie_app.ui.home.adapter.CategoryDiffCallback
 import java.util.*
 
 class CategoryAdapter(private val homeViewModel: HomeViewModel) :

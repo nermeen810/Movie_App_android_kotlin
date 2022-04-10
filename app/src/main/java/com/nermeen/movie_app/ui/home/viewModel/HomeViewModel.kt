@@ -1,4 +1,4 @@
-package com.nermeen.movie_app.ui.home
+package com.nermeen.movie_app.ui.home.viewModel
 
 import android.view.View
 import androidx.lifecycle.MediatorLiveData
@@ -20,16 +20,33 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val modelRepo: ModelRepo) : ViewModel() {
 
-    val genres: MutableLiveData<CategoryResponse?> = MutableLiveData()
-    val movies: MutableLiveData<MoviesResponse?> = MutableLiveData()
+    private  val _genres: MutableLiveData<CategoryResponse?> = MutableLiveData()
+    private  val _movies: MutableLiveData<MoviesResponse?> = MutableLiveData()
+    private  val _isLoading: MutableLiveData<Boolean> = MutableLiveData()
+    private  val _errorMessage: MutableLiveData<String> = MutableLiveData()
+    private  val _navigationToDetailsLiveDate: MutableLiveData<SingleEvent<Movies>> = MutableLiveData()
+    private  var pageNumber = 1
     var lastSelectedPos = 0
-    val isLoading: MutableLiveData<Boolean> = MutableLiveData()
-    val errorMessage: MutableLiveData<String> = MutableLiveData()
-    val navigationToDetailsLiveDate: MutableLiveData<SingleEvent<Movies>> = MutableLiveData()
 
-    private var pageNumber = 1
+    val genres: LiveData<CategoryResponse?> = _genres
+
+    val movies: LiveData<MoviesResponse?>
+        get() = _movies
+
+    val isLoading: LiveData<MoviesResponse?>
+        get() = _isLoading
+
+    val errorMessage: LiveData<String>
+        get() = _errorMessage
+
+    val navigationToDetailsLiveDate: LiveData<SingleEvent<Movies>>
+        get() = _navigationToDetailsLiveDate
 
     init {
+        getCategories()
+    }
+
+    fun  getCategories() {
         isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             when (val categoryResponse = modelRepo.getCategory()) {
@@ -59,9 +76,7 @@ class HomeViewModel @Inject constructor(private val modelRepo: ModelRepo) : View
             }
 
         }
-
     }
-
     fun navigateToDetails(movies: Movies) {
         navigationToDetailsLiveDate.postValue(SingleEvent(movies))
     }
