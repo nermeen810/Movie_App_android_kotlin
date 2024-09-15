@@ -1,10 +1,10 @@
 package com.nermeen.movie_app.data.model
 
 data class DetailsResponse  (
-    val adult: Boolean,
-    val backdrop_path: String,
+    val adult: Boolean?,
+    val backdrop_path: String?,
     val belongs_to_collection: Any,
-    val budget: Int,
+    val budget: Int?,
     val genres: List<Genre>,
     val homepage: String,
     val id: Int,
@@ -36,9 +36,9 @@ data class Genre(
 
 data class ProductionCompany(
     val id: Int,
-    val logo_path: String,
+    val logoPath: String,
     val name: String,
-    val origin_country: String)
+    val originCountry: String)
 {
     override fun toString(): String {
         return name.plus(" ")
@@ -46,12 +46,12 @@ data class ProductionCompany(
 }
 
 data class ProductionCountry(
-    val iso_3166_1: String,
+    val iso31661: String,
     val name: String
 )
 
 data class SpokenLanguage(
-    val english_name: String,
-    val iso_639_1: String,
+    val englishName: String,
+    val iso6391: String,
     val name: String
 )

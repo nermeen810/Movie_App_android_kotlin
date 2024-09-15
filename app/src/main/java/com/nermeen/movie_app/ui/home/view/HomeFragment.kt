@@ -12,33 +12,24 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.nermeen.movie_app.R
 import com.nermeen.movie_app.databinding.FragmentHomeBinding
-import com.nermeen.movie_app.ui.home.adapter.CategoryAdapter
 import com.nermeen.movie_app.ui.home.viewModel.HomeViewModel
 import com.nermeen.movie_app.ui.home.adapter.MovieAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
-    lateinit var binding : FragmentHomeBinding
-    lateinit var categoryAdapter : CategoryAdapter
-    lateinit var movieAdapter : MovieAdapter
+    private lateinit var binding : FragmentHomeBinding
+    private lateinit var movieAdapter : MovieAdapter
     val viewModel: HomeViewModel by viewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         setUpUI()
         observeData()
@@ -49,17 +40,14 @@ class HomeFragment : Fragment() {
     private fun setUpUI(){
         binding.viewmodel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
-        categoryAdapter = CategoryAdapter(viewModel)
-        binding.categoriesRecycle.adapter = categoryAdapter
         movieAdapter = MovieAdapter(viewModel)
-        binding.moviesRecycle.layoutManager = GridLayoutManager(context, 2)
+        binding.moviesRecycle.layoutManager = LinearLayoutManager(context)
         binding.moviesRecycle.adapter = movieAdapter
     }
 
    private fun observeData(){
        observeShowError()
        observeNavToDetails()
-       observeCategories()
        observeMovies()
    }
 
@@ -71,17 +59,11 @@ class HomeFragment : Fragment() {
 
     private fun observeNavToDetails(){
         viewModel.navigationToDetailsLiveDate.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { movie ->
+            it.getContentIfNotHandled()?.let { movieId ->
                 val bundle = Bundle()
-                bundle.putSerializable("movie",movie)
+                bundle.putLong("movieId",movieId)
                 findNavController().navigate(R.id.action_homeFragment_to_datailsFragment,bundle)
             }
-        }
-    }
-
-    private fun observeCategories(){
-        viewModel.genres.observe(viewLifecycleOwner) {
-            categoryAdapter.submitList(it?.genres)
         }
     }
 
@@ -109,30 +91,28 @@ class HomeFragment : Fragment() {
     }
 
     private fun registerConnectivityNetworkMonitor() {
-        if (requireContext() != null) {
-            val connectivityManager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            val builder = NetworkRequest.Builder()
-            connectivityManager.registerNetworkCallback(builder.build(),
-                object : ConnectivityManager.NetworkCallback() {
-                    override fun onAvailable(network: Network) {
-                        super.onAvailable(network)
-                        if (activity != null) {
-                            activity!!.runOnUiThread {
-                                viewModel.getCategories()
-                            }
-                        }
-                    }
-
-                    override fun onLost(network: Network) {
-                        super.onLost(network)
-                        if (activity != null) {
-                            activity!!.runOnUiThread {
-                             showMessage(getString(R.string.network_error_msg))
-                            }
+        val connectivityManager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val builder = NetworkRequest.Builder()
+        connectivityManager.registerNetworkCallback(builder.build(),
+            object : ConnectivityManager.NetworkCallback() {
+                override fun onAvailable(network: Network) {
+                    super.onAvailable(network)
+                    if (activity != null) {
+                        activity!!.runOnUiThread {
+                            viewModel.getMovies()
                         }
                     }
                 }
-            )
-        }
+
+                override fun onLost(network: Network) {
+                    super.onLost(network)
+                    if (activity != null) {
+                        activity!!.runOnUiThread {
+                         showMessage(getString(R.string.network_error_msg))
+                        }
+                    }
+                }
+            }
+        )
     }
 }

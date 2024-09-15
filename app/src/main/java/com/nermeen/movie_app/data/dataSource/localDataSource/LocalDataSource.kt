@@ -1,25 +1,24 @@
 package com.nermeen.movie_app.data.dataSource.localDataSource
 
-import com.nermeen.movie_app.data.dataSource.remoteDataSource.ApiDataSource
-import com.nermeen.movie_app.data.model.Category
 import com.nermeen.movie_app.data.model.Movies
 import javax.inject.Inject
 
 class LocalDataSource @Inject constructor(private val dao: MoviesDao) {
 
-    fun getCategories(): List<Category> {
-        return dao.getCategories()
-    }
-
     fun getMovies(): List<Movies> {
         return dao.getMovies()
     }
 
-    fun insertAllMovies(list: List<Movies>) {
-        dao.insertAllMovies(list)
+    fun insertMovie(movie: Movies) {
+        dao.insertMovie(movie)
     }
 
-    fun insertAllCategories(list: List<Category>) {
-        dao.insertAllCategories(list)
+    fun isAddedToFavorite(movieId: Long): Boolean {
+        return dao.isFounded(movieId) > 0
     }
+
+    fun deleteMovieById(movieId: Long) {
+        dao.deleteMovieById(movieId)
+    }
+
 }

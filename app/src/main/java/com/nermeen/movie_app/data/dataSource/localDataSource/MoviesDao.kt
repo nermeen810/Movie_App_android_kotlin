@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.nermeen.movie_app.data.model.Category
 import com.nermeen.movie_app.data.model.Movies
 
 @Dao
@@ -13,11 +12,11 @@ interface MoviesDao {
     fun getMovies(): List<Movies>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllMovies(movies: List<Movies>)
+    fun insertMovie(movie: Movies)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllCategories(categories: List<Category>)
+    @Query("SELECT COUNT(*) FROM Movies WHERE id = :movieId")
+    fun isFounded(movieId: Long): Int
 
-    @Query("SELECT * FROM Category")
-    fun getCategories(): List<Category>
+    @Query("DELETE FROM Movies WHERE id = :movieId")
+    fun deleteMovieById(movieId: Long)
 }

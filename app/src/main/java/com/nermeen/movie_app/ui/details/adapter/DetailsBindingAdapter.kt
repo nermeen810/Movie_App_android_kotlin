@@ -5,10 +5,12 @@ import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.nermeen.movie_app.utils.Constants
 
-
 @BindingAdapter("app:setImageURL")
-fun setImageByURL(image: ImageView, url: String) {
-    Glide.with(image.context)
-        .load(Constants.createImageUrl(url))
-        .into(image)
+fun setImageByURL(image: ImageView, url: String?) {
+    url?.let {
+        Glide.with(image.context)
+            .load(Constants.createImageUrl(url))
+            .into(image)
+    }
+
 }

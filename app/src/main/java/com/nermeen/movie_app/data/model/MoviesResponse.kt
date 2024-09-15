@@ -7,18 +7,8 @@ import java.io.Serializable
 data class MoviesResponse(
     val page: Int,
     var results: List<Movies>,
-    val total_pages: Int,
-    val total_results: Int,
-)
-
-data class CategoryResponse(
-    val genres: List<Category>
-)
-
-@Entity
-data class Category(
-    @PrimaryKey val id: Int,
-    val name: String
+    val totalPages: Int,
+    val totalResults: Int,
 )
 
 @Entity

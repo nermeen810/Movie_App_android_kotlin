@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/datailsFragment"
-        android:name="com.nermeen.movie_app.ui.details.view.DatailsFragment"
+        android:name="com.nermeen.movie_app.ui.details.view.DetailsFragment"
         android:label="fragment_datails"
         tools:layout="@layout/fragment_datails" >
         <argument

@@ -1,7 +1,6 @@
 package com.nermeen.movie_app.ui.home.viewModel
 
 import androidx.lifecycle.*
-import com.nermeen.movie_app.data.model.CategoryResponse
 import com.nermeen.movie_app.data.model.Movies
 import com.nermeen.movie_app.data.model.MoviesResponse
 import com.nermeen.movie_app.data.resposatory.ModelRepo
@@ -9,21 +8,18 @@ import com.nermeen.movie_app.utils.Result
 import com.nermeen.movie_app.utils.SingleEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val modelRepo: ModelRepo) : ViewModel() {
 
-    private  val _genres: MutableLiveData<CategoryResponse?> = MutableLiveData()
     private  val _movies: MutableLiveData<MoviesResponse?> = MutableLiveData()
     private  val _isLoading: MutableLiveData<Boolean> = MutableLiveData()
     private  val _errorMessage: MutableLiveData<String> = MutableLiveData()
-    private  val _navigationToDetailsLiveDate: MutableLiveData<SingleEvent<Movies>> = MutableLiveData()
+    private  val _navigationToDetailsLiveDate: MutableLiveData<SingleEvent<Long>> = MutableLiveData()
     private  var pageNumber = 1
-    var lastSelectedPos = 0
-
-    val genres: LiveData<CategoryResponse?> = _genres
 
     val movies: LiveData<MoviesResponse?>
         get() = _movies
@@ -34,69 +30,50 @@ class HomeViewModel @Inject constructor(private val modelRepo: ModelRepo) : View
     val errorMessage: LiveData<String>
         get() = _errorMessage
 
-    val navigationToDetailsLiveDate: LiveData<SingleEvent<Movies>>
+    val navigationToDetailsLiveDate: LiveData<SingleEvent<Long>>
         get() = _navigationToDetailsLiveDate
 
     init {
-        getCategories()
+        getMovies()
     }
 
-    fun  getCategories() {
-        _isLoading.value = true
+    fun navigateToDetails(movieId: Long) {
+        _navigationToDetailsLiveDate.postValue(SingleEvent(movieId))
+    }
+
+    fun addToFavorite(movies: Movies) {
         viewModelScope.launch(Dispatchers.IO) {
-            when (val categoryResponse = modelRepo.getCategory()) {
-                is Result.Success -> {
-                    categoryResponse.data?.genres?.let {
-                        modelRepo.insertAllCategories(it)
-                    }
-                    _genres.postValue(categoryResponse.data)
-                    categoryResponse.data?.genres?.firstOrNull()?.id?.let {
-                        getMovieByCategoryId(it)
-                    }
-
-                }
-
-                is Result.Error -> {
-                    _errorMessage.postValue(categoryResponse.exception.localizedMessage)
-                    modelRepo.getCategories().let {
-                        _genres.postValue(CategoryResponse(it))
-                        val result = modelRepo.getMovies().filter { movie ->
-                            movie.genre_ids.contains(it.firstOrNull()?.id)
-                        }
-                        _movies.postValue(MoviesResponse(0, result, 0, 0))
-                        _isLoading.postValue(false)
-                    }
-
-                }
-            }
-
+            modelRepo.insertMovie(movies)
         }
     }
-    fun navigateToDetails(movies: Movies) {
-        _navigationToDetailsLiveDate.postValue(SingleEvent(movies))
+    fun removeFromFavorite(movieId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            modelRepo.deleteMovieById(movieId)
+        }
     }
 
-    fun getMovieByCategoryId(id: Int) {
+
+    suspend fun isAddedToFavorite(movieId: Long): Boolean {
+        val isAdded = viewModelScope.async(Dispatchers.IO) {
+            modelRepo.isAddedToFavorite(movieId)
+        }
+        return isAdded.await()
+    }
+
+
+    fun getMovies() {
         _isLoading.postValue(true)
         viewModelScope.launch(Dispatchers.IO) {
             val moviesResponse =
-                modelRepo.loadMoreMoviesForCategory(id.toString(), pageNumber)
+                modelRepo.loadMoreMovies(pageNumber)
             when (moviesResponse) {
                 is Result.Success -> {
-                    moviesResponse.data?.results?.let {
-                        modelRepo.insertAllMovies(it)
-                    }
-
                     _movies.postValue(moviesResponse.data)
                     _isLoading.postValue(false)
                 }
 
                 is Result.Error -> {
                     _errorMessage.postValue(moviesResponse.exception.localizedMessage)
-                    val result = modelRepo.getMovies().filter {
-                        it.genre_ids.contains(id)
-                    }
-                    _movies.postValue(MoviesResponse(0, result, 0, 0))
                     _isLoading.postValue(false)
                 }
             }

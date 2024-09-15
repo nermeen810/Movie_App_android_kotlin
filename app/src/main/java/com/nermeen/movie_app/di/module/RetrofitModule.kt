@@ -10,7 +10,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -21,10 +20,10 @@ class RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideRetrofit(okHttpClient:OkHttpClient): Retrofit {
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
 
         return Retrofit.Builder()
-            .baseUrl(Constants.base_url)
+            .baseUrl(Constants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()
@@ -32,17 +31,15 @@ class RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideMovieRestApi(retrofit: Retrofit) : ApiService{
-        return  retrofit.create(ApiService::class.java)
+    fun provideMovieRestApi(retrofit: Retrofit): ApiService {
+        return retrofit.create(ApiService::class.java)
     }
 
     @Provides
-    fun provideClient(@ApplicationContext context: Context) : OkHttpClient {
+    fun provideClient(@ApplicationContext context: Context): OkHttpClient {
 
         return OkHttpClient.Builder()
             .addInterceptor(NetworkConnectionInterceptor(context))
             .build()
     }
-
-
 }
